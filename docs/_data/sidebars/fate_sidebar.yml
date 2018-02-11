@@ -1,0 +1,129 @@
+# This is your sidebar TOC. The sidebar code loops through sections here and provides the appropriate formatting.
+
+entries:
+- title: sidebar
+  product: Algorithm Development Framework
+  version: 2018.Q1.1
+  folders:
+
+  - title:
+    output: pdf
+    type: frontmatter
+    folderitems:
+    - title:
+      url: /titlepage.html
+      output: pdf
+      type: frontmatter
+    - title:
+      url: /tocpage.html
+      output: pdf
+      type: frontmatter
+
+  - title: Overview
+    output: web, pdf
+    folderitems:
+
+    - title: Overview
+      url: /index.html
+      output: web, pdf
+      type: homepage
+
+    - title: Get started
+      url: /get_started.html
+      output: web, pdf
+
+    - title: About the author
+      url: /about_author.html
+      output: web, pdf
+
+    - title: Support
+      url: /support.html
+      output: web, pdf
+
+  - title: Vision and Scope
+    output: web, pdf
+    folderitems:
+
+    - title: Business Requirements
+      url: /business_requirements.html
+      output: web, pdf
+
+    - title: Scope, Features, Limitations
+      url: /scope_features_limitations.html
+      output: web, pdf
+
+    - title: Business Context
+      url: /business_context.html
+      output: web, pdf
+
+  - title: User Requirements
+    output: web, pdf
+    folderitems:
+
+    - title: Overview
+      url: /user_requirements_overview.html
+      output: web, pdf
+
+    - title: Actors
+      url: /actors.html
+      output: web, pdf
+
+    - title: Use Cases
+      url: /use_cases.html
+      output: web, pdf
+
+  - title: Software Requirements
+    output: web, pdf
+    folderitems:
+
+    - title: Overview
+      url: /software_requirements_overview.html
+      output: web, pdf
+
+    - title: System Features
+      url: /system_features.html
+      output: web, pdf
+
+    - title: Data Requirements
+      url: /data_requirements.html
+      output: web, pdf
+
+    - title: Interface Requirements
+      url: /interface_requirements.html
+      output: web, pdf
+
+    - title: Quality Attributes
+      url: /quality_attributes.html
+      output: web, pdf
+
+    - title: Localization Requirements
+      url: /localization_requirements.html
+      output: web, pdf
+
+  - title: Architecture
+    output: web, pdf
+    folderitems:
+
+    - title: Overview
+      url: /architecture_overview.html
+      output: web, pdf
+
+    - title: Continuous Delivery
+      url: /continuous_delivery.html
+      output: web, pdf
+
+  - title: Detailed Design
+    output: web, pdf
+    folderitems:
+
+    - title: Commenting on files
+      url: /mydoc_commenting_on_files.html
+      output: web, pdf
+
+  - title: Troubleshooting
+    output: web, pdf
+    folderitems:
+
+    - title: Troubleshooting
+      url: /troubleshooting.html
+      output: web, pdf
