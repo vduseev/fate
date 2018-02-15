@@ -50,40 +50,40 @@ The name is an acronym `FATE` – `F`ramework for `A`lgorithm `TE`sting.
 1. User runs `fate` in the directory
 1. Fate reads arguments:
 
-  1. If `1st` positional argument is present, then Fate will treat that string as a path to executable solution that has to be tested.
+   1. If `1st` positional argument is present, then Fate will treat that string as a path to executable solution that has to be tested.
 
-    * Note, that both relative and absolute paths are acceptable.
-    * Usage examples: `fate solution.py`
+      * Note, that both relative and absolute paths are acceptable.
+      * Usage examples: `fate solution.py`
 
-  1. If `-i [--input]` named argument is present, then Fate will treat that string as a path to input data files.
+   1. If `-i [--input]` named argument is present, then Fate will treat that string as a path to input data files.
 
-    * Note, that both relative and absolute paths are acceptable.
-    * Also the path can be a wildcard.
-    * If `-i` argument is present, then `-o [--output]` path has to be present as well. The `-o` argument has same rules for path format as `-i` argument.
-    * Usage example: `fate -i test_input* -o test_output*`. In this example Fate picks up first executable file and searches for all the matching pairs of `test_input*` and `test_output*` files in the current and in the `../test_data` directories.
+      * Note, that both relative and absolute paths are acceptable.
+      * Also the path can be a wildcard.
+      * If `-i` argument is present, then `-o [--output]` path has to be present as well. The `-o` argument has same rules for path format as `-i` argument.
+      * Usage example: `fate -i test_input* -o test_output*`. In this example Fate picks up first executable file and searches for all the matching pairs of `test_input*` and `test_output*` files in the current and in the `../test_data` directories.
 
-  1. If `-t [--time]` named argument is present, then Fate will measure the execution time.
-  Usage example: `fate -t`.
-  1. If `-m [--memory]` named argument is present, then Fate will measure memory consumption.
-  Usage example: `fate -m`.
-  1. If `-r [--repeat]` named argument is present, then Fate will repeat the measurement for either time or memory `r` times.
-  Usage example: `fate -t -r 10`.
+   1. If `-t [--time]` named argument is present, then Fate will measure the execution time.
+   Usage example: `fate -t`.
+   1. If `-m [--memory]` named argument is present, then Fate will measure memory consumption.
+   Usage example: `fate -m`.
+   1. If `-r [--repeat]` named argument is present, then Fate will repeat the measurement for either time or memory `r` times.
+   Usage example: `fate -t -r 10`.
 
 1. Fate reads configuration files
 
-  1. Fate reads `fate.yaml` config files starting from the current directory and up to the root directory.
-  1. Low-level file rules always **overwrite** high-level config file rules, i.e. `/project/problem/solution/fate.yaml` config file has priority above `/project/problem/fate.yaml` config.
-  1. If Fate didn't find a certain **required** rule in any of the `fate.yaml` files in the directory branch, then it tries to find these values in the `.faterc` config file in the current user's directory.
-  1. TODO: Specify here how input/output pairs are configured.
+   1. Fate reads `fate.yaml` config files starting from the current directory and up to the root directory.
+   1. Low-level file rules always **overwrite** high-level config file rules, i.e. `/project/problem/solution/fate.yaml` config file has priority above `/project/problem/fate.yaml` config.
+   1. If Fate didn't find a certain **required** rule in any of the `fate.yaml` files in the directory branch, then it tries to find these values in the `.faterc` config file in the current user's directory.
+   1. TODO: Specify here how input/output pairs are configured.
 
 1. Fate applies default rules when certain required rule was not found even in `.faterc` file.
 
-  1. If `-i` and `-o` paths were not specified anywhere, then Fate looks for `input*` and `output*` group of matching files in current directory. Fate checks the `test_data*` directory in the parent directory, i.e. `../test_data*`. Fate considers an input and output files matching (and uses them) when wildcard parts in `input*` and `output*` are matching, i.e. `input_01.dat` and `output_01.dat`. If any of the files has no match Fate discards it.
-  1. If `-r` amount of repeats was not specified anywhere, then Fate executes all input/output pairs **one time** by default.
-  1. If path to executable solution is not specified anywhere, then Fate will search for the first executable file in the current directory following these rules:
+   1. If `-i` and `-o` paths were not specified anywhere, then Fate looks for `input*` and `output*` group of matching files in current directory. Fate checks the `test_data*` directory in the parent directory, i.e. `../test_data*`. Fate considers an input and output files matching (and uses them) when wildcard parts in `input*` and `output*` are matching, i.e. `input_01.dat` and `output_01.dat`. If any of the files has no match Fate discards it.
+   1. If `-r` amount of repeats was not specified anywhere, then Fate executes all input/output pairs **one time** by default.
+   1. If path to executable solution is not specified anywhere, then Fate will search for the first executable file in the current directory following these rules:
 
-    1. If platform is **Windows**: first (alphabetically) file with `.exe` extension.
-    1. If platform is **\*nix**: first (alphabetically) executable file, as determined by Python3's `is_executable` function.
+      1. If platform is **Windows**: first (alphabetically) file with `.exe` extension.
+      1. If platform is **\*nix**: first (alphabetically) executable file, as determined by Python3's `is_executable` function.
 
 1. Fate executes given tasks
 
