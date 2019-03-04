@@ -2,7 +2,7 @@
 
 entries:
 - title: sidebar
-  product: Algorithm Development Framework
+  product: Fate
   version: 2018.Q1.1
   folders:
 
@@ -105,7 +105,7 @@ entries:
     folderitems:
 
     - title: Overview
-      url: /architecture_overview.html
+      url: /architecture.html
       output: web, pdf
 
     - title: Continuous Delivery
