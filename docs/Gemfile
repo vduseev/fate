@@ -1,6 +1,0 @@
-source "https://rubygems.org"
-
-# Removed GitHub gem since the site is built locally because of the custom
-# include plugin.
-gem 'github-pages', group: :jekyll_plugins
-gem 'wdm', '>= 0.1.0' if Gem.win_platform?
