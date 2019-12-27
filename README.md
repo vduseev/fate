@@ -2,37 +2,47 @@
 
 Fast Algorithm Testing Environment
 
+`fate` executes given algorithm against a set of test cases consisting of input/output text file pairs. 
+
+It determines whether the algorithm was correct and reports execution times and memory footprints. To do that with a predictable precision it uses `docker` to run executables in an isolated environment locally or in cloud. In case of a test case failure it prints the `diff` between the output of an algorithm and the desired output allowing for a line-by-line investigation of a failed alrogirhm.
+
+To further aid the user it starts up a debugger for a step-by-step execution of an algorithm against a given test case.
+
+Fate is designed with [HackerRank](https://www.hackerrank.com) in mind.
+
 ## Requirements
+
+### Business requirements
 
 ### Functional requirements
 
-- [ ] Run an executable file that contains an algorithmic solution to a given problem. Feed given input files to the executable and verify the outputs against the corresponding ouput files.
-- [ ] Run the executable in an isolated container.
-- [ ] Run the isolated container in the cloud with a predictable perfomance.
-- [ ] Measure execution time.
-- [ ] Measure memory usage.
-- [ ] Calculate bettter measures using a multitude of statistical methods.
-- [ ] Compile the source code using predefined docker images for each language.
-- [ ] Debug solutions during test runs.
-- [ ] Run executables asynchronously being able to stop/pause them at any moment.
-- [ ] Send the source code to HackerRank and get back the results.
-- [ ] Test a single solution against all input/output pairs.
-- [ ] Test a single solution against a single input/output pair.
-- [ ] Test all solutions in all the languages for the given problem.
-- [ ] Test all solutions in the repository.
+- [ ] `FR-1` Run an executable file that contains an algorithmic solution to a given problem. Feed given input files to the executable and verify the outputs against the corresponding ouput files.
+- [ ] `FR-2` Run the executable in an isolated container.
+- [ ] `FR-3` Run the isolated container in the cloud with a predictable perfomance.
+- [ ] `FR-4` Measure execution time.
+- [ ] `FR-5` Measure memory usage.
+- [ ] `FR-6` Calculate bettter measures using a multitude of statistical methods.
+- [ ] `FR-7` Compile the source code using predefined docker images for each language.
+- [ ] `FR-8` Debug solutions during test runs.
+- [ ] `FR-9` Run executables asynchronously being able to stop/pause them at any moment.
+- [ ] `FR-10` Send the source code to HackerRank and get back the results.
+- [ ] `FR-11` Test a single solution against all input/output pairs.
+- [ ] `FR-12` Test a single solution against a single input/output pair.
+- [ ] `FR-13` Test all solutions in all the languages for the given problem.
+- [ ] `FR-14` Test all solutions in the repository.
 
 ### User interface
 
-- [ ] `fate` is a systemwide command line tool.
-- [ ] Installed via Homebrew on MacOS and Apt on Debian systems.
-- [ ] Configuration files in the directory to control the behaviour of `fate`.
+- [ ] `UI-1` `fate` is a systemwide command line tool.
+- [ ] `UI-2` Installed via Homebrew on MacOS and Apt on Debian systems.
+- [ ] `UI-3` Configuration files in the directory to control the behaviour of `fate`.
 
 ### Inputs and outputs
 
 #### Inputs
 
-- [ ] Current directory is cosidered to be the current execution context.
-- [ ] Expected directory layout to support `fate`:
+- [ ] `IO-1` Current directory is cosidered to be the current execution context.
+- [ ] `IO-2` Expected directory layout to support `fate`:
 
   ```shell
   repository-with-solutions/    # your repository, where all solutions are contained
@@ -78,20 +88,20 @@ Fast Algorithm Testing Environment
       output34.txt
   ```
 
-- [ ] Input/output files are searched in the following order:
-  - [ ] Matching pairs of files in the current directory with a naming convention being `input*.txt` and `output*.txt`.
-  - [ ] Matching pairs of files with the same pattern but being placed in the `./input/` and `./output/` subdirectories of the current directory.
-  - [ ] Same two attempts but in the parent directory `./..`.
-  - [ ] Again, same two attempts but in the grandparent directory `./../..`
+- [ ] `IO-3` Input/output files are searched in the following order:
+  - [ ] `IO-3.1` Matching pairs of files in the current directory with a naming convention being `input*.txt` and `output*.txt`.
+  - [ ] `IO-3.2` Matching pairs of files with the same pattern but being placed in the `./input/` and `./output/` subdirectories of the current directory.
+  - [ ] `IO-3.3` Same two attempts but in the parent directory `./..`.
+  - [ ] `IO-3.4` Again, same two attempts but in the grandparent directory `./../..`
   - This means that `fate` traverses 3 levels of directories: the current directory and into two levels above the current directory.
   - Higher level directories are traversed if the current directory had no matching pairs of input/output files.
-  - [ ] Read input and output interactively from stdin.
-- [ ] The executable solution is searched in the following order:
-  - [ ] `fate [path]` specified as the absolute/relative path in the first positional argument during invokation
-  - [ ] First executable file in the current directory `./`.
-  - [ ] First executable in any of the subdirectories `./*/`.
-  - [ ] First executable in any of the sub-subdirectories `./*/*/`
-- [ ] Language codes for solution languages are as following:
+  - [ ] `IO-4` Read input and output interactively from stdin.
+- [ ] `IO-5` The executable solution is searched in the following order:
+  - [ ] `IO-5.1` `fate [path]` specified as the absolute/relative path in the first positional argument during invokation
+  - [ ] `IO-5.2` First executable file in the current directory `./`.
+  - [ ] `IO-5.3` First executable in any of the subdirectories `./*/`.
+  - [ ] `IO-5.4` First executable in any of the sub-subdirectories `./*/*/`
+- [ ] `IO-6` Language codes for solution languages are as following:
 
   | Code     | Language                  |
   | -------- | ------------------------- |
@@ -115,20 +125,20 @@ Fast Algorithm Testing Environment
 
 ##### Exceptions and error handling
 
-- [ ] If no mathing input/output pairs are found then:
+- [ ] `ERR-1` If no mathing input/output pairs are found then:
   - [ ] `Matching input/output files are not found` message is printed to stderr.
-  - [ ] `fate` exits with code `27`.
-- [ ] If no executable is found then:
+  - [ ] `fate` exits with code `1`.
+- [ ] `ERR-2` If no executable is found then:
   - [ ] `Executable solution not found` message is printed to stderr.
-  - [ ] `fate` exits with code `28`.
-- [ ] If executable does not exist:
+  - [ ] `fate` exits with code `2`.
+- [ ] `ERR-3` If executable does not exist:
   - [ ] `Executable <path> does not exist` message is printed to stderr.
-  - [ ] `fate` exits with code `29`.
-- [ ] If specified executable file has no execution rights:
+  - [ ] `fate` exits with code `3`.
+- [ ] `ERR-4` If specified executable file has no execution rights:
   - [ ] `File <path> cannot be executed` message is printed to stderr.
-  - [ ] `fate` exits with code `30`.
+  - [ ] `fate` exits with code `4`.
 
 ##### Warnings
 
-- [ ] If input/output file size is larger than 1GiB:
+- [ ] `WAR-1` If input/output file size is larger than 1GiB:
   - [ ] `File <path> is larger than 1GiB` message is printed to stdout.
