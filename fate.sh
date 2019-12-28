@@ -16,8 +16,11 @@ function determine_script_location_dir() {
     FATE_SCRIPT_ROOT_DIR="$( cd -P "$( dirname "$source" )" >/dev/null 2>&1 && pwd )"
 }
 
+# Function call determines where exactly the fate.sh is located
+# despite being symlinked
 determine_script_location_dir
 
+# Import main logic
 source "$FATE_SCRIPT_ROOT_DIR/fate/main.sh"
 
 main "$@"
