@@ -2,7 +2,7 @@
 
 Fast Algorithm Testing Environment
 
-`fate` executes given algorithm against a set of test cases consisting of input/output text file pairs. 
+`fate` executes given algorithm against a set of test cases consisting of input/output text file pairs.
 
 It determines whether the algorithm was correct and reports execution times and memory footprints. To do that with a predictable precision it uses `docker` to run executables in an isolated environment locally or in cloud. In case of a test case failure it prints the `diff` between the output of an algorithm and the desired output allowing for a line-by-line investigation of a failed alrogirhm.
 
