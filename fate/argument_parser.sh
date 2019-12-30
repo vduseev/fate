@@ -12,7 +12,10 @@ function parse_arguments() {
                 OUTPUT_FILE="$2"
                 shift; shift;;
             -e|--env|--environment)
-                ENVIRONMENT="$2"
+                ENV="$2"
+                shift; shift;;
+            -v|--verbosity)
+                VERBOSITY="$2"
                 shift; shift;;
             --help)
                 HELP=YES
@@ -25,6 +28,6 @@ function parse_arguments() {
     set -- "${positional[@]}"
 
     if [[ -n $1 ]]; then
-        SOURCE_FILE="$1"
+        SOURCE_CODE_FILE="$1"
     fi
 }
