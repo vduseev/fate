@@ -1,4 +1,4 @@
-LOG_LEVEL=1
+VERBOSITY=1
 
 declare -A LOG_LEVEL_NAMES
 LOG_LEVEL_NAMES[1]="ERROR"
@@ -16,8 +16,11 @@ function log_message() {
     local level="$1"
     local message="$2"
 
-    if [[ $level -le $LOG_LEVEL ]]; then
-        echo "[$(date)] ${LOG_LEVEL_MESSAGE[$level]} $message"
+    if [[ $level -le $VERBOSITY ]]; then
+        # Form a string to print
+        local log_line="[$(date)] ${LOG_LEVEL_MESSAGE[$level]} $message"
+        # Print to stderr
+        1>&2 printf '%s\n' "$log_line"
     fi
 }
 
