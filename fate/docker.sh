@@ -20,17 +20,26 @@ function execute_in_docker_container() {
     local input_file_dir=$(dirname "$input_file_abs_path")
 
     local cid=$(
-        docker run \
-            --detach \
-            --mount "type=bind,src=$source_code_file_dir,dst=$CONTAINER_WORKDIR" \
-            --mount "type=bind,src=$input_file_dir,dst=$CONTAINER_WORKDIR/input" \
-            --workdir "$CONTAINER_WORKDIR" \
-            "$image_name" \
-            bash -c "$cmd"
+        { 
+            docker run \
+                --detach \
+                --mount "type=bind,src=$source_code_file_dir,dst=$CONTAINER_WORKDIR" \
+                --mount "type=bind,src=$input_file_dir,dst=$CONTAINER_WORKDIR/input" \
+                --workdir "$CONTAINER_WORKDIR" \
+                "$image_name" bash -c "$cmd"; 
+        } 2>/dev/null
     )
 
     debug "cid: $cid"
     
-    local results=$(docker logs "$cid")
+    local results=$(docker logs "$cid" 2>/dev/null)
     debug "results: $results"
+
+    local errors=$(docker logs "$cid" 2>&1 >/dev/null)
+    if [[ -z $errors ]]; then
+        errors="no errors"
+    fi
+    debug "errors: $errors"
+
+    printf '%s' "$results"
 }
