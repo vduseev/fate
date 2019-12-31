@@ -26,6 +26,7 @@ function main() {
     # For each pair in the collection invoke a docker container based
     # on certain image and apply corresponding cpu/mem/time restrictions.
     local image=$(get_env_image_name $ENV)
+
     local cmd=$(
         get_env_execution_cmd \
             $ENV \
@@ -33,11 +34,21 @@ function main() {
             $input_file_basename
     )
 
-    execute_in_docker_container \
-        "$image" \
-        "$cmd" \
-        "$source_code_file_abs_path" \
-        "$input_file_abs_path"
+    local result=$(
+        execute_in_docker_container \
+            "$image" \
+            "$cmd" \
+            "$source_code_file_abs_path" \
+            "$input_file_abs_path"
+    )
+
+    local expected=$(
+        cat "$output_file_abs_path"
+    )
+
+    debug "expected: $expected"
+
+    diff -u <(printf "$result") <(printf "$expected")
 
     # For each pair of input output run a diff between the desired output
     # and the actual output of the algorithm.
