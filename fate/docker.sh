@@ -2,7 +2,7 @@ source "$FATE_SCRIPT_ROOT_DIR/fate/logging.sh"
 
 CONTAINER_WORKDIR="/execution/"
 
-function execute_in_docker_container() {
+function launch_container() {
     # Full image name from Docker Hub
     # e.g. fate/python3:latest
     local image_name="$1"
@@ -14,11 +14,6 @@ function execute_in_docker_container() {
     # Absolute path to the test case input file on the host system.
     local input_file_abs_path="$4"
 
-    # Argument verification
-    if [[ -z $image_name ]]; then
-        error "(docker.execute_in_docker_container) image name argument is empty"
-    fi
-
     # Extract directory path part from file locations to mount them into
     # container.
     local source_code_file_dir=$(dirname "$source_code_file_abs_path")
@@ -29,25 +24,30 @@ function execute_in_docker_container() {
     # container in the background.
     local cid=$(
         { 
-            docker run \
-                --detach \
-                --mount "type=bind,src=$source_code_file_dir,dst=$CONTAINER_WORKDIR" \
-                --mount "type=bind,src=$input_file_dir,dst=$CONTAINER_WORKDIR/input" \
-                --workdir "$CONTAINER_WORKDIR" \
+            docker run                                                                  \
+                --detach                                                                \
+                --mount "type=bind,src=$source_code_file_dir,dst=$CONTAINER_WORKDIR"    \
+                --mount "type=bind,src=$input_file_dir,dst=$CONTAINER_WORKDIR/input"    \
+                --workdir "$CONTAINER_WORKDIR"                                          \
                 "$image_name" bash -c "$cmd"; 
         }
     )
 
-    debug "cid: $cid"
-    
-    local results=$(docker logs "$cid" 2>/dev/null)
-    debug "results: $results"
+    printf "$cid"
+}
 
-    local errors=$(docker logs "$cid" 2>&1 >/dev/null)
-    if [[ -z $errors ]]; then
-        errors="no errors"
-    fi
-    debug "errors: $errors"
+function retrieve_stdout_from_container() {
+    local cid="$1"
 
-    printf '%s' "$results"
+    # Collect only stdout from docker logs
+    local stdout=$(docker logs "$cid" 2>/dev/null)
+    printf "$stdout"
+}
+
+function retrieve_stderr_from_container() {
+    local cid="$1"
+
+    # Collect only stderr from docker logs
+    local stderr=$(docker logs "$cid" 2>&1 >/dev/null)
+    printf "$stderr"
 }

@@ -25,7 +25,8 @@ function log_message() {
         # Form a string to print
         local log_line="[$(date)] ${LOG_LEVEL_MESSAGE[$level]} $message"
         # Print to stderr
-        1>&2 printf '%s\n' "$log_line"
+        #1>&2 printf '%s\n' "$log_line"
+        printf '%s\n' "$log_line"
     fi
 }
 
