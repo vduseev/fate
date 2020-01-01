@@ -133,19 +133,19 @@ function main() {
             info "Errors found:"
             printf "$errors\n"
             info "Input:"
-            cat "$i"
+            printf "$(cat $i)\n"
             info "Output:"
-            printf "$actual"
+            printf "$actual\n"
             info "Expected:"
-            cat "${test_pairs[$i]}"
+            printf "$(cat ${test_pairs[$i]})\n"
 
         elif [[ -z $actual ]]; then
 
             info "Output is empty"
             info "Input:"
-            cat "$i"
+            printf "$(cat $i)\n"
             info "Expected:"
-            cat "${test_pairs[$i]}"
+            printf "$(cat ${test_pairs[$i]})\n"
 
         elif [[ "$expected" == "$actual" ]]; then
 
@@ -155,11 +155,11 @@ function main() {
 
             info "Expected and actual output do not match"
             info "Input:"
-            cat "$i"
+            printf "$(cat $i)\n"
             info "Output:"
-            printf "$actual"
+            printf "$actual\n"
             info "Expected:"
-            cat "${test_pairs[$i]}"
+            printf "$(cat ${test_pairs[$i]})\n"
             info "Diff (unified) expected <-> actual:"
             diff -u <(printf "$expected\n") <(printf "$actual\n")
         fi
