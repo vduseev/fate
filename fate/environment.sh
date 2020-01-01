@@ -22,6 +22,7 @@ function get_env_execution_cmd() {
     # Name of input file containing testcase data
     local input_filename="$3"
 
+    # Argument verification
     if [[ -z $1 ]]; then
         error "(get_env_execution_cmd) missing argument 1: language spec name"
         exit 1
@@ -35,6 +36,9 @@ function get_env_execution_cmd() {
         exit 1
     fi
 
+    # Return a proper algorithm compilation/invokation command for the
+    # chosen environment.
+    # That command will be executed in a container.
     case $lang in
         python3)
             printf "python3 $source_code_filename < input/$input_filename";;
