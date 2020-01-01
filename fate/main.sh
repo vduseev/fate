@@ -82,8 +82,8 @@ function main() {
         local cmd=$(
             get_env_execution_cmd   \
                 $ENV                \
-                $input_name         \
-                $src_name           )
+                $src_name           \
+                $input_name         )
         
         debug "cmd: $cmd"
 
@@ -123,8 +123,45 @@ function main() {
     for i in "${!test_pairs[@]}"; do
         local expected=$(cat "${test_pairs[$i]}")
         local actual="${test_results_stdout[$i]}"
+        local errors="${test_results_stderr[$i]}"
 
-        #info "Test $i results:"
-        #diff -u <(printf "$result") <(printf "$expected")
+        local test_name="$(basename $i)"
+        info "Test results for $test_name:"
+
+        if [[ -n $errors ]]; then
+
+            info "Errors found:"
+            printf "$errors\n"
+            info "Input:"
+            cat "$i"
+            info "Output:"
+            printf "$actual"
+            info "Expected:"
+            cat "${test_pairs[$i]}"
+
+        elif [[ -z $actual ]]; then
+
+            info "Output is empty"
+            info "Input:"
+            cat "$i"
+            info "Expected:"
+            cat "${test_pairs[$i]}"
+
+        elif [[ "$expected" == "$actual" ]]; then
+
+            info "Sucessful!"
+
+        else
+
+            info "Expected and actual output do not match"
+            info "Input:"
+            cat "$i"
+            info "Output:"
+            printf "$actual"
+            info "Expected:"
+            cat "${test_pairs[$i]}"
+            info "Diff (unified) expected <-> actual:"
+            diff -u <(printf "$expected\n") <(printf "$actual\n")
+        fi
     done
 }
