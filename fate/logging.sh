@@ -16,6 +16,11 @@ function log_message() {
     local level="$1"
     local message="$2"
 
+    # Argument verification
+    if [[ -z $1 ]]; then
+        error "(logging.log_message) Verbosity level argument is empty"
+    fi
+
     if [[ $level -le $VERBOSITY ]]; then
         # Form a string to print
         local log_line="[$(date)] ${LOG_LEVEL_MESSAGE[$level]} $message"
