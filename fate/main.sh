@@ -13,6 +13,7 @@ source "$FATE_SCRIPT_ROOT_DIR/fate/docker.sh"
 
 function main() {
     parse_arguments "$@"
+    verify_arguments
 
     debug "Arguments..."
     debug "INPUT_FILE:          $INPUT_FILE"
