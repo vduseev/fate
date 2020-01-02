@@ -8,14 +8,14 @@ VERBOSITY=1
 
 source "$FATE_SCRIPT_ROOT_DIR/fate/logging.sh"
 source "$FATE_SCRIPT_ROOT_DIR/fate/argument_parser.sh"
-source "$FATE_SCRIPT_ROOT_DIR/fate/environment.sh"
-source "$FATE_SCRIPT_ROOT_DIR/fate/docker.sh"
+source "$FATE_SCRIPT_ROOT_DIR/fate/discovery.sh"
+source "$FATE_SCRIPT_ROOT_DIR/fate/orchestration.sh"
+source "$FATE_SCRIPT_ROOT_DIR/fate/analyzer.sh"
 
 function main() {
     parse_arguments "$@"
     verify_arguments
 
-    debug "Arguments..."
     debug "INPUT_FILE:          $INPUT_FILE"
     debug "OUTPUT_FILE:         $OUTPUT_FILE"
     debug "ENV:                 $ENV"
@@ -25,14 +25,12 @@ function main() {
 
     local src_path=$(realpath $SOURCE_CODE_FILE)
     local src_name=$(basename $src_path)
-
     debug "src_path:            $src_path"
     debug "src_name:            $src_name"
 
     # For each pair in the collection invoke a docker container based
     # on certain image and apply corresponding cpu/mem/time restrictions.
     local image=$(get_env_image_name $ENV)
-
     debug "image:               $image"
 
     # Test pairs dictionary contains pairs of input and output test
@@ -47,137 +45,25 @@ function main() {
     declare -A test_runs
     # Test results dictionary has the same keys as the test pairs
     # dictionary but stores test results for each key invokation.
-    declare -A test_results_stdout
-    declare -A test_results_stderr
+    declare -A test_stdouts
+    declare -A test_stderrs
 
     # Find all test pairs
     debug "Discovering test case files..."
-
-    # If input/output test file pair has been explicitely set in the
-    # command line arguments then this is the only test pair we
-    # are going to run.
-    if [[ -n $INPUT_FILE ]] && [[ -n $OUTPUT_FILE ]]; then
-        local input_file_abs_path=$(realpath $INPUT_FILE)
-        local output_file_abs_path=$(realpath $OUTPUT_FILE)
-
-        test_pairs["$input_file_abs_path"]="$output_file_abs_path"
-    else
-        # Check current directory
-        for f in input*.txt; do
-            local matching_output_file="${f/input/output}"
-            # If matching output file exists, then add a test pair
-            if [[ -f "$matching_output_file" ]]; then
-                local input_file_abs_path=$(realpath $f)
-                local output_file_abs_path=$(realpath $matching_output_file)
-                test_pairs["$input_file_abs_path"]="$output_file_abs_path"
-            fi
-        done
-
-        # If nothing has been collected in the current directory, then
-        # check in the ./input/ and ./output/ subdirectories of the 
-        # current directory.
-    fi
-
-    local num_test_pairs="${#test_pairs[@]}"
-
-    debug "Number of test pairs: $num_test_pairs"
-    for i in "${!test_pairs[@]}"; do
-        debug "input:   $(basename $i)"
-        debug "output:  $(basename ${test_pairs[$i]})"
-    done
+    find_test_pairs test_pairs
 
     # Launch all tests
-
-    local launch_counter=1
-
-    for i in "${!test_pairs[@]}"; do
-        info "Launching test pair $launch_counter..."
-
-        # Build a command to execute in container
-        local input_name=$(basename $i)
-        local cmd=$(
-            get_env_execution_cmd   \
-                $ENV                \
-                $src_name           \
-                $input_name         )
-        
-        debug "cmd: $cmd"
-
-        # Launch docker container in the background
-        local cid=$(
-            launch_container        \
-                "$image"            \
-                "$cmd"              \
-                "$src_path"         \
-                "$i"                )
-
-        debug "cid: $cid"
-
-        test_runs["$i"]="$cid"
-
-        launch_counter=$((launch_counter+1))
-    done
+    debug "Launching all test pairs..."
+    launch_tests test_pairs test_runs
 
     info "Waiting for all containers to finish..."
-
-    sleep 1
-
-    debug "Collecting results from all containers..."
+    wait_for_tests
 
     # Collect all results
-    for i in "${!test_pairs[@]}"; do
-        local cid="${test_runs[$i]}"
-        local stdout=$(retrieve_stdout_from_container "$cid")
-        local stderr=$(retrieve_stderr_from_container "$cid")
-        test_results_stdout["$i"]="$stdout"
-        test_results_stderr["$i"]="$stderr"
-    done
-
-    debug "Reporting results..."
+    debug "Collecting results from all containers..."
+    collect_results test_pairs test_runs test_stdouts test_stderrs
 
     # Analyze test runs
-    for i in "${!test_pairs[@]}"; do
-        local expected=$(cat "${test_pairs[$i]}")
-        local actual="${test_results_stdout[$i]}"
-        local errors="${test_results_stderr[$i]}"
-
-        local test_name="$(basename $i)"
-        info "Test results for $test_name:"
-
-        if [[ -n $errors ]]; then
-
-            info "Errors found:"
-            printf "$errors\n"
-            info "Input:"
-            printf "$(cat $i)\n"
-            info "Output:"
-            printf "$actual\n"
-            info "Expected:"
-            printf "$(cat ${test_pairs[$i]})\n"
-
-        elif [[ -z $actual ]]; then
-
-            info "Output is empty"
-            info "Input:"
-            printf "$(cat $i)\n"
-            info "Expected:"
-            printf "$(cat ${test_pairs[$i]})\n"
-
-        elif [[ "$expected" == "$actual" ]]; then
-
-            info "Sucessful!"
-
-        else
-
-            info "Expected and actual output do not match"
-            info "Input:"
-            printf "$(cat $i)\n"
-            info "Output:"
-            printf "$actual\n"
-            info "Expected:"
-            printf "$(cat ${test_pairs[$i]})\n"
-            info "Diff (unified) expected <-> actual:"
-            diff -u <(printf "$expected\n") <(printf "$actual\n")
-        fi
-    done
+    debug "Reporting results..."
+    analyze_tests test_pairs test_stdouts test_stderrs
 }
