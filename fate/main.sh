@@ -66,4 +66,8 @@ function main() {
     # Analyze test runs
     debug "Reporting results..."
     analyze_tests test_pairs test_stdouts test_stderrs
+
+    # Remove containers used to run tests
+    debug "Removing containers..."
+    cleanup test_runs
 }

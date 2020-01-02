@@ -51,3 +51,12 @@ function collect_results() {
         runs_stderr["$i"]="$stderr"
     done
 }
+
+function cleanup() {
+    local -n runs=$1
+
+    for cid in "${runs[@]}"; do
+        debug "Removing $cid..."
+        remove_container "$cid"
+    done
+}

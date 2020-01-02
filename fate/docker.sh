@@ -52,3 +52,9 @@ function retrieve_stderr_from_container() {
     local stderr=$(docker logs "$cid" 2>&1 >/dev/null)
     printf "$stderr"
 }
+
+function remove_container() {
+    local cid="$1"
+
+    docker rm --force --volumes "$cid" &> /dev/null
+}
