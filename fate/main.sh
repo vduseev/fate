@@ -61,6 +61,21 @@ function main() {
         local output_file_abs_path=$(realpath $OUTPUT_FILE)
 
         test_pairs["$input_file_abs_path"]="$output_file_abs_path"
+    else
+        # Check current directory
+        for f in input*.txt; do
+            local matching_output_file="${f/input/output}"
+            # If matching output file exists, then add a test pair
+            if [[ -f "$matching_output_file" ]]; then
+                local input_file_abs_path=$(realpath $f)
+                local output_file_abs_path=$(realpath $matching_output_file)
+                test_pairs["$input_file_abs_path"]="$output_file_abs_path"
+            fi
+        done
+
+        # If nothing has been collected in the current directory, then
+        # check in the ./input/ and ./output/ subdirectories of the 
+        # current directory.
     fi
 
     local num_test_pairs="${#test_pairs[@]}"
