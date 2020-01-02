@@ -1,6 +1,7 @@
 source "$FATE_SCRIPT_ROOT_DIR/fate/logging.sh"
 
-CONTAINER_WORKDIR="/execution/"
+CONTAINER_SOURCE_DIR="/source/"
+CONTAINER_INPUT_DIR="/input/"
 
 function launch_container() {
     # Full image name from Docker Hub
@@ -26,9 +27,9 @@ function launch_container() {
         { 
             docker run                                                                  \
                 --detach                                                                \
-                --mount "type=bind,src=$source_code_file_dir,dst=$CONTAINER_WORKDIR"    \
-                --mount "type=bind,src=$input_file_dir,dst=$CONTAINER_WORKDIR/input"    \
-                --workdir "$CONTAINER_WORKDIR"                                          \
+                --mount "type=bind,src=$source_code_file_dir,dst=$CONTAINER_SOURCE_DIR" \
+                --mount "type=bind,src=$input_file_dir,dst=$CONTAINER_INPUT_DIR"        \
+                --workdir "$CONTAINER_SOURCE_DIR"                                       \
                 "$image_name" bash -c "$cmd"; 
         }
     )

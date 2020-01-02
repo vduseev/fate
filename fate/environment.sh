@@ -41,9 +41,9 @@ function get_env_execution_cmd() {
     # That command will be executed in a container.
     case $lang in
         python3)
-            printf "python3 $source_code_filename < input/$input_filename";;
+            printf "python3 $source_code_filename < /input/$input_filename";;
         bash)
-            printf "bash $source_code_filename";;
+            printf "bash $source_code_filename < /input/$input_filename";;
         *)
             error "Environment for $lang does not exist"
             exit 1;;
