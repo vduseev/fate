@@ -3,6 +3,7 @@ INPUT_FILE=""
 OUTPUT_FILE=""
 ENV=""
 HELP=""
+STDOUT=""
 SOURCE_CODE_FILE=""
 VERBOSITY=1
 
@@ -20,6 +21,7 @@ function main() {
     debug "OUTPUT_FILE:         $OUTPUT_FILE"
     debug "ENV:                 $ENV"
     debug "HELP:                $HELP"
+    debug "STDOUT:              $STDOUT"
     debug "SOURCE_CODE_FILE:    $SOURCE_CODE_FILE"
     debug "VERBOSITY:           $VERBOSITY"
 
@@ -27,11 +29,6 @@ function main() {
     local src_name=$(basename $src_path)
     debug "src_path:            $src_path"
     debug "src_name:            $src_name"
-
-    # For each pair in the collection invoke a docker container based
-    # on certain image and apply corresponding cpu/mem/time restrictions.
-    local image=$(get_env_image_name $ENV)
-    debug "image:               $image"
 
     # Test pairs dictionary contains pairs of input and output test
     # files.
@@ -54,7 +51,7 @@ function main() {
 
     # Launch all tests
     debug "Launching all test pairs..."
-    launch_tests test_pairs test_runs
+    launch_tests "$ENV" test_pairs test_runs
 
     info "Waiting for all containers to finish..."
     wait_for_tests

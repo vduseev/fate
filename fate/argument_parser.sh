@@ -22,6 +22,9 @@ function parse_arguments() {
             --help)
                 HELP=YES
                 shift;;
+            --stdout)
+                STDOUT=YES
+                shift;;
             *)
                 positional+=("$1")
                 shift;;
