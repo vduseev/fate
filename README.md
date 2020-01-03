@@ -10,6 +10,15 @@ To further aid the user it starts up a debugger for a step-by-step execution of 
 
 Fate is designed with [HackerRank](https://www.hackerrank.com) in mind.
 
+## Usage
+
+TBD.
+
+### Dependencies
+
+* bash >=4.3
+* Docker >= 1.25
+
 ## Requirements
 
 ### Business requirements
