@@ -54,7 +54,7 @@ function retrieve_stdout_from_container() {
 
     # Collect only stdout from docker logs
     local stdout=$(docker logs "$cid" 2>/dev/null)
-    printf "$stdout"
+    printf '%s' "$stdout"
 }
 
 function retrieve_stderr_from_container() {
@@ -62,7 +62,7 @@ function retrieve_stderr_from_container() {
 
     # Collect only stderr from docker logs
     local stderr=$(docker logs "$cid" 2>&1 >/dev/null)
-    printf "$stderr"
+    printf '%s' "$stderr"
 }
 
 function retrieve_output_path_from_container() {
@@ -75,7 +75,7 @@ function retrieve_output_path_from_container() {
     # stdout as well.
     local output=$(
         docker cp "$cid:$CONTAINER_OUTPUT_PATH" - | tar -Oxzf - )
-    printf "$output"
+    printf '%s' "$output"
 }
 
 function remove_container() {
