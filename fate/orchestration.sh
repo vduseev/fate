@@ -1,6 +1,9 @@
 source "$FATE_SCRIPT_ROOT_DIR/fate/logging.sh"
 source "$FATE_SCRIPT_ROOT_DIR/fate/docker.sh"
 
+DEBUGGER_ATTACH_IP="127.0.0.1"
+DEBUGGER_ATTACH_PORT="$CONTAINER_HOST_MAPPED_PORT"
+
 function launch_tests() {
     local lang_spec="$1"
     local -n pairs=$2
@@ -18,6 +21,14 @@ function launch_tests() {
                 "$i"                )
         runs["$i"]="$cid"
         debug "cid: $cid"
+
+        if [[ -n $DEBUG ]]; then
+            debug "Entering debug mode for test pair $counter..."
+
+            debug "$(docker exec $cid nmap -p 4444 127.0.0.1)"
+
+            attach_to_debugger "4444"
+        fi
 
         counter=$((counter+1))
     done
@@ -54,4 +65,13 @@ function cleanup() {
         debug "Removing $cid..."
         remove_container "$cid"
     done
+}
+
+function attach_to_debugger() {
+    local port="$1"
+
+    debug "Trying nc..."
+    sleep 3
+    nc "$DEBUGGER_ATTACH_IP" "$DEBUGGER_ATTACH_PORT"
+    debug "NC return: $?"
 }

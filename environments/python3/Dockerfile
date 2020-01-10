@@ -8,9 +8,8 @@ RUN pip install \
     beautifulsoup4 \
     pycrypto \
     cryptography \
-    urllib3 
+    urllib3 \
+    ripdb 
 
 RUN apt-get purge -y build-essential
 RUN apt-get autoremove -y
-
-CMD ["python", "-c", "print('f')"]

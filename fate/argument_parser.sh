@@ -25,6 +25,9 @@ function parse_arguments() {
             --stdout)
                 STDOUT=YES
                 shift;;
+            -d|--debug)
+                DEBUG=YES
+                shift;;
             *)
                 positional+=("$1")
                 shift;;

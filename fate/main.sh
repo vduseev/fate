@@ -4,6 +4,7 @@ OUTPUT_FILE=""
 ENV=""
 HELP=""
 STDOUT=""
+DEBUG=""
 SOURCE_CODE_FILE=""
 VERBOSITY=1
 
@@ -22,6 +23,7 @@ function main() {
     debug "ENV:                 $ENV"
     debug "HELP:                $HELP"
     debug "STDOUT:              $STDOUT"
+    debug "DEBUG:               $DEBUG"
     debug "SOURCE_CODE_FILE:    $SOURCE_CODE_FILE"
     debug "VERBOSITY:           $VERBOSITY"
 

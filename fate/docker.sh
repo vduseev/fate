@@ -4,6 +4,8 @@ source "$FATE_SCRIPT_ROOT_DIR/fate/environment.sh"
 CONTAINER_SOURCE_DIR="/source/"
 CONTAINER_INPUT_DIR="/input/"
 CONTAINER_OUTPUT_PATH="/tmp/result.txt"
+CONTAINER_DEBUGGER_PORT="4444"
+CONTAINER_HOST_MAPPED_PORT="4576"
 
 function launch_container() {
     # Language spec
@@ -40,6 +42,8 @@ function launch_container() {
                 --detach                                                                \
                 --mount "type=bind,src=$source_code_file_dir,dst=$CONTAINER_SOURCE_DIR" \
                 --mount "type=bind,src=$input_file_dir,dst=$CONTAINER_INPUT_DIR"        \
+                --expose "$CONTAINER_DEBUGGER_PORT"                                     \
+                --publish "$CONTAINER_HOST_MAPPED_PORT:$CONTAINER_DEBUGGER_PORT"        \
                 --env "OUTPUT_PATH=$CONTAINER_OUTPUT_PATH"                              \
                 --workdir "$CONTAINER_SOURCE_DIR"                                       \
                 "$image" bash -c "$cmd"; 
