@@ -24,9 +24,6 @@ function launch_tests() {
 
         if [[ -n $DEBUG ]]; then
             debug "Entering debug mode for test pair $counter..."
-
-            debug "$(docker exec $cid nmap -p 4444 127.0.0.1)"
-
             attach_to_debugger "4444"
         fi
 
