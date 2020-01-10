@@ -23,7 +23,7 @@ function analyze_tests() {
             error "Test results for $test_name: empty output"
             print_input "$i"
             print_expected "${pairs[$i]}"
-        elif [[ "$expected" == "$actual" ]]; then
+        elif check_output_is_same "$expected" "$actual"; then
             info "Test results for $test_name: successful!"
             pass_counter=$((pass_counter+1))
         else
@@ -38,6 +38,19 @@ function analyze_tests() {
     info "$pass_counter/${#pairs[@]} tests passed, $((${#pairs[@]} - $pass_counter)) tests failed"
 }
 
+function check_output_is_same() {
+    local expected="$1"
+    local actual="$2"
+
+    local result=$(diff -q --strip-trailing-cr <(printf "$expected\n") <(printf "$actual\n"))
+
+    if [[ -z $result ]]; then
+        return 0    
+    else
+        return 1
+    fi
+}
+
 function print_input() {
     local filepath="$1"
 
@@ -49,7 +62,7 @@ function print_output() {
     local actual_output="$1"
 
     error "Your output:"
-    printf "$actual\n"
+    printf "$actual_output\n"
 }
 
 function print_expected() {
@@ -70,6 +83,6 @@ function print_diff() {
     local expected="$1"
     local actual="$2"
 
-    info "Diff (unified) expected <-> actual:"
-    diff -u <(printf "$expected\n") <(printf "$actual\n")
+    info "Diff (unified, no trailing cr) expected vs. actual:"
+    diff -u --strip-trailing-cr <(printf "$expected\n") <(printf "$actual\n")
 }
