@@ -42,7 +42,7 @@ function check_output_is_same() {
     local expected="$1"
     local actual="$2"
 
-    local result=$(diff -q --strip-trailing-cr <(printf "$expected\n") <(printf "$actual\n"))
+    local result=$(diff -q --strip-trailing-cr <(printf '%s\n' "$expected") <(printf '%s\n' "$actual"))
 
     if [[ -z $result ]]; then
         return 0    
@@ -55,21 +55,21 @@ function print_input() {
     local filepath="$1"
 
     error "Input:"
-    printf "$(cat $i)\n"
+    printf '%s\n' "$(cat $i)"
 }
 
 function print_output() {
     local actual_output="$1"
 
     error "Your output:"
-    printf "$actual_output\n"
+    printf '%s\n' "$actual_output"
 }
 
 function print_expected() {
     local filepath="$1"
 
     error "Expected output:"
-    printf "$(cat $filepath)\n"
+    printf '%s\n' "$(cat $filepath)"
 }
 
 function print_errors() {
@@ -84,5 +84,5 @@ function print_diff() {
     local actual="$2"
 
     info "Diff (unified, no trailing cr) expected vs. actual:"
-    diff -u --strip-trailing-cr <(printf "$expected\n") <(printf "$actual\n")
+    diff -u --strip-trailing-cr <(printf '%s\n' "$expected") <(printf '%s\n' "$actual")
 }
