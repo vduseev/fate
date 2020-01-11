@@ -2,13 +2,15 @@ source "$FATE_SCRIPT_ROOT_DIR/fate/logging.sh"
 
 function analyze_tests() {
     local -n pairs=$1
-    local -n stdouts=$2
-    local -n stderrs=$3
+    local -n results=$2
+    local -n stdouts=$3
+    local -n stderrs=$4
 
     local pass_counter=0
     for i in "${!pairs[@]}"; do
         local expected=$(cat "${pairs[$i]}")
-        local actual="${stdouts[$i]}"
+        local actual="${results[$i]}"
+        local logs="${stdouts[$i]}"
         local errors="${stderrs[$i]}"
 
         local test_name="$(basename $i)"
@@ -19,12 +21,15 @@ function analyze_tests() {
             print_input "$i"
             print_output "$actual"
             print_expected "${pairs[$i]}"
+            print_logs "$logs"
         elif [[ -z $actual ]]; then
             error "Test results for $test_name: empty output"
             print_input "$i"
             print_expected "${pairs[$i]}"
+            print_logs "$logs"
         elif check_output_is_same "$expected" "$actual"; then
             info "Test results for $test_name: successful!"
+            print_logs "$logs"
             pass_counter=$((pass_counter+1))
         else
             error "Test results for $test_name: output don't match"
@@ -32,6 +37,7 @@ function analyze_tests() {
             print_output "$actual"
             print_expected "${pairs[$i]}"
             print_diff "$expected" "$actual"
+            print_logs "$logs"
         fi
     done
 
@@ -85,4 +91,18 @@ function print_diff() {
 
     info "Diff (unified, no trailing cr) expected vs. actual:"
     diff -u --strip-trailing-cr <(printf '%s\n' "$expected") <(printf '%s\n' "$actual")
+}
+
+function print_logs() {
+    local logs="$1"
+
+    # If STDOUT option has been used in arguments then
+    # stdout will be used for output and not for logs.
+    # In that case - don't report logs.
+    if [[ -n $STDOUT ]]; then
+        return
+    fi
+
+    error "Your stdout logs:"
+    printf '%s\n' "$logs"
 }

@@ -44,6 +44,7 @@ function main() {
     declare -A test_runs
     # Test results dictionary has the same keys as the test pairs
     # dictionary but stores test results for each key invokation.
+    declare -A test_results
     declare -A test_stdouts
     declare -A test_stderrs
 
@@ -60,11 +61,11 @@ function main() {
 
     # Collect all results
     debug "Collecting results from all containers..."
-    collect_results test_pairs test_runs test_stdouts test_stderrs
+    collect_results test_pairs test_runs test_results test_stdouts test_stderrs
 
     # Analyze test runs
     debug "Reporting results..."
-    analyze_tests test_pairs test_stdouts test_stderrs
+    analyze_tests test_pairs test_results test_stdouts test_stderrs
 
     # Remove containers used to run tests
     debug "Removing containers..."

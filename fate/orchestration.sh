@@ -38,18 +38,21 @@ function wait_for_tests() {
 function collect_results() {
     local -n pairs=$1
     local -n runs=$2
-    local -n runs_stdout=$3
-    local -n runs_stderr=$4
+    local -n runs_result=$3
+    local -n runs_stdout=$4
+    local -n runs_stderr=$5
 
     for i in "${!pairs[@]}"; do
         local cid="${runs[$i]}"
-        local stdout=""
+        local stdout=$(retrieve_stdout_from_container "$cid")
+        local result=""
         if [[ -n $STDOUT ]]; then
-            stdout=$(retrieve_stdout_from_container "$cid")
+            result="$stdout"
         else
-            stdout=$(retrieve_output_path_from_container "$cid")
+            result=$(retrieve_output_path_from_container "$cid")
         fi
         local stderr=$(retrieve_stderr_from_container "$cid")
+        runs_result["$i"]="$result"
         runs_stdout["$i"]="$stdout"
         runs_stderr["$i"]="$stderr"
     done
