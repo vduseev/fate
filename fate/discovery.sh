@@ -1,3 +1,4 @@
+source "$FATE_SCRIPT_ROOT_DIR/fate/error.sh"
 source "$FATE_SCRIPT_ROOT_DIR/fate/logging.sh"
 
 function find_test_pairs() {
@@ -35,7 +36,7 @@ function find_test_pairs() {
     # have been collected.
     if [[ ${#pairs[@]} -eq 0 ]]; then
         error "(discovery.find_test_pairs) unable to find input-output test file pairs"
-        exit 1
+        die
     else
         debug "${#pairs[@]} test pairs have been found"
     fi

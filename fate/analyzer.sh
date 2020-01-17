@@ -1,3 +1,4 @@
+source "$FATE_SCRIPT_ROOT_DIR/fate/error.sh"
 source "$FATE_SCRIPT_ROOT_DIR/fate/logging.sh"
 
 function analyze_tests() {
@@ -14,30 +15,31 @@ function analyze_tests() {
         local errors="${stderrs[$i]}"
 
         local test_name="$(basename $i)"
+        local test_anouncement="[$test_name]:"
 
         if [[ -n $errors ]]; then
-            error "Test results for $test_name: errors"
-            print_errors "$errors"
+            printf "$test_anouncement errors!\n"
             print_input "$i"
             print_output "$actual"
             print_expected "${pairs[$i]}"
+            print_errors "$errors"
             print_logs "$logs"
         elif [[ -z $actual ]]; then
-            error "Test results for $test_name: empty output"
+            printf "$test_anouncement empty output!\n"
             print_input "$i"
             print_expected "${pairs[$i]}"
             print_logs "$logs"
         elif check_output_is_same "$expected" "$actual"; then
-            info "Test results for $test_name: successful!"
+            printf "$test_anouncement successful!\n"
             print_logs "$logs"
             pass_counter=$((pass_counter+1))
         else
-            error "Test results for $test_name: output don't match"
+            printf "$test_anouncement outputs do not match!\n"
             print_input "$i"
             print_output "$actual"
             print_expected "${pairs[$i]}"
-            print_diff "$expected" "$actual"
             print_logs "$logs"
+            print_diff "$expected" "$actual"
         fi
     done
 
@@ -60,28 +62,33 @@ function check_output_is_same() {
 function print_input() {
     local filepath="$1"
 
-    error "Input:"
+    printf '%s\n' "-> [Input]"
     printf '%s\n' "$(cat $i)"
 }
 
 function print_output() {
     local actual_output="$1"
 
-    error "Your output:"
-    printf '%s\n' "$actual_output"
+    if [[ -n $actual_output ]]; then
+        printf '%s\n' "-> [Your output]"
+        # Only print output if there is at least something
+        printf '%s\n' "$actual_output"
+    else
+        printf '%s\n' "-> [Your output]: empty!"
+    fi
 }
 
 function print_expected() {
     local filepath="$1"
 
-    error "Expected output:"
+    printf '%s\n' "-> [Expected output]"
     printf '%s\n' "$(cat $filepath)"
 }
 
 function print_errors() {
     local errors="$1"
 
-    error "Errors found:"
+    printf '%s\n' "-> [Errors]"
     printf "$errors\n"
 }
 
@@ -89,7 +96,7 @@ function print_diff() {
     local expected="$1"
     local actual="$2"
 
-    info "Diff (unified, no trailing cr) expected vs. actual:"
+    printf '%s\n' "Diff (unified, no trailing cr) expected vs. actual:"
     diff -u --strip-trailing-cr <(printf '%s\n' "$expected") <(printf '%s\n' "$actual")
 }
 
@@ -103,6 +110,11 @@ function print_logs() {
         return
     fi
 
-    error "Your stdout logs:"
-    printf '%s\n' "$logs"
+    if [[ -n $logs ]]; then
+        printf '%s\n' "-> [Your logs]"
+        # Only print logs if there is actually something to print
+        printf '%s\n' "$logs"
+    else
+        printf '%s\n' "-> [Your logs]: empty!"
+    fi
 }

@@ -82,6 +82,19 @@ function retrieve_output_path_from_container() {
     printf '%s' "$output"
 }
 
+function get_container_status() {
+    local cid="$1"
+
+    local status=$(docker inspect --format '{{ .State.Status }}' "$cid")
+    printf "$status"
+}
+
+function kill_container() {
+    local cid="$1"
+
+    docker kill "$cid"
+}
+
 function remove_container() {
     local cid="$1"
 

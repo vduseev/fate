@@ -42,6 +42,7 @@ function main() {
     # of detached containers in the background and later collect
     # their outputs using docker log and stored CIDs.
     declare -A test_runs
+    declare -A test_times
     # Test results dictionary has the same keys as the test pairs
     # dictionary but stores test results for each key invokation.
     declare -A test_results
@@ -54,10 +55,10 @@ function main() {
 
     # Launch all tests
     debug "Launching all test pairs..."
-    launch_tests "$ENV" test_pairs test_runs
+    launch_tests "$ENV" test_pairs test_runs test_times
 
     info "Waiting for all containers to finish..."
-    wait_for_tests
+    wait_for_tests test_runs test_times
 
     # Collect all results
     debug "Collecting results from all containers..."

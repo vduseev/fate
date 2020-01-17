@@ -43,23 +43,25 @@ function parse_arguments() {
 function verify_arguments() {
     # Verify source code file path is present
     if [[ -z $SOURCE_CODE_FILE ]]; then
-        error "(argument_parser.verify_arguments) missing argument: source code file path"
-        exit 1
+        fatal "missing argument: 1st positional argument (path to the source code file)"
     fi
 
     # Verify that if input and output options are only present simultaneously
     if [[ -n $INPUT_FILE ]] && [[ -z $OUTPUT_FILE ]]; then
-        error "(argument_parser.verify_arguments) missing argument: input file path is present but output file path is missing"
-        exit 1
+        fatal "missing argument: input file path is present but output file path is missing"
     fi
+
     if [[ -z $INPUT_FILE ]] && [[ -n $OUTPUT_FILE ]]; then
-        error "(argument_parser.verify_arguments) missing argument: output file path is present but input file path is missing"
-        exit 1
+        fatal "missing argument: output file path is present but input file path is missing"
     fi
 
     # Verify that verbosity is within allowed limits
     if [[ $VERBOSITY -lt 1 ]] || [[ $VERBOSITY -gt 4 ]]; then
-        error "(argument_parser.verify_arguments) wrong value: verbosity value must be between 1 (default) and 4"
-        exit 1
+        fatal "wrong value: verbosity value must be between 1 (default) and 4"
+    fi
+
+    # Verify that environment is specified
+    if [[ -z $ENV ]]; then
+        fatal "missing argument: environment has not been specified"
     fi
 }
