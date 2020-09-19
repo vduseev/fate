@@ -1,5 +1,13 @@
-.DS_Store
-.venv
+# VS Code
 .vscode
-settings.json
 fate.code-workspace
+
+# Python
+.venv
+__pycache__
+dist/
+*.egg-info
+.mypy_cache
+
+# MacOS
+.DS_Store
