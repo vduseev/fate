@@ -1,0 +1,23 @@
+{
+    "solutions": [
+        {
+            "path": "python3/solution01.py"
+        },
+        {
+            "path": "bash/solve.sh"
+        }
+    ],
+    "test_case_collections": [
+        {
+            "input_glob": "input/input*.txt",
+            "output_glob": "output/output*.txt"
+        },
+        {
+            "input_glob": "special_test_cases/tc*.in",
+            "output_glob": "special_test_cases/tc*.out"
+        },
+        {
+            "input_glob": "only_inputs/*.txt"
+        }
+    ]
+}
