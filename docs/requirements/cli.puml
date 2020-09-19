@@ -1,0 +1,54 @@
+@startuml
+
+start
+
+if (//path// specified\n**C-3**) then (yes)
+    if (//path// exists\nand is file\n**C-4**) then (yes)
+
+    else (no)
+        #IndianRed://path// does\nnot exist\n**E-1**<
+        stop
+    endif
+else (no)
+    #AliceBlue:Find executable\n**A-4**>
+endif
+#MediumSeaGreen://executable//\npath\n**F-1**]
+
+if (//--case// specified\n**C-8**) then (yes)
+    #AliceBlue:Find test cases\n**A-3**>
+    if (//case// exists\n**C-9**) then (yes)
+        #MediumSeaGreen://case// name\n**F-3**]
+    else (no)
+        #IndianRed://case// not found\n**E-4**<
+        stop
+    endif
+else (no)
+
+endif
+
+if (//--input-file// specified\n**C-1**) then (yes)
+    if (//input-file// exists\nand is file\n**C-7**) then (yes)
+        #MediumSeaGreen://input-file//\npath\n**F-2**] 
+    else (no)
+        #IndianRed://input-file// does\nnot exist\n**E-2**<
+        stop
+    endif
+else (no)
+    #MediumSeaGreen://input-file//\nunset!\n**F-5**]
+endif
+
+if (//--output-file// specified\n**C-2**) then (yes)
+    if (//output-file// exists\nand is file\n**C-8**) then (yes)
+        #MediumSeaGreen://output-file//\npath\n**F-3**]
+    else (no)
+        #IndianRed://output-file// does\nnot exist\n**E-3**<
+        stop
+    endif
+    #AliceBlue:Run executable\nagainst input only\n**A-1**>
+else (no)
+    #AliceBlue:Run executable against\nboth input and output\n**A-2**>
+endif
+
+stop
+
+@enduml
