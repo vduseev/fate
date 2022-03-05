@@ -8,10 +8,13 @@ Header = List[str]
 Rows = List[List[str]]
 Table = Tuple[Header, Rows]
 
+
 class Configuration(object):
     def __init__(self) -> None:
         super().__init__()
-        self._configuration: Optional[config.ConfigurationSet] = None  # ConfigurationSet object from config library
+        self._configuration: Optional[
+            config.ConfigurationSet
+        ] = None  # ConfigurationSet object from config library
 
     def build(self) -> None:
         prioritized_init_list = []
@@ -26,15 +29,14 @@ class Configuration(object):
     def as_table(self) -> Table:
         headers = ["Setting", "Value"]
         if self._configuration:
-            return (
-                headers,
-                [[k, v] for k, v in self._configuration.items()]
-            )
-            
+            return (headers, [[k, v] for k, v in self._configuration.items()])
+
         else:
             return (headers, [["", ""]])
 
-    def __load_from_env(self, prefix: str = "FATE", separator: str = "_") -> config.Configuration:
+    def __load_from_env(
+        self, prefix: str = "FATE", separator: str = "_"
+    ) -> config.Configuration:
         cfg = config.config_from_env(prefix, separator, lowercase_keys=True)
         return cfg
 

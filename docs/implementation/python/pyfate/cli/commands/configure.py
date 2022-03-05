@@ -9,12 +9,26 @@ class ConfigureCommand(Command):
     description = "Configure the environment"
 
     arguments = [
-        argument("command", description="Which command to execute: show, get, or set", optional=False),
-        argument("parameter", description="Which parameter to set or get", optional=True)
+        argument(
+            "command",
+            description="Which command to execute: show, get, or set",
+            optional=False,
+        ),
+        argument(
+            "parameter", description="Which parameter to set or get", optional=True
+        ),
     ]
     options = [
-        option("user", description="Save configuration file in user's home directory when setting parameter", flag=True),
-        option("system", description="Save configuration file in system directory when setting parameters", flag=True)
+        option(
+            "user",
+            description="Save configuration file in user's home directory when setting parameter",
+            flag=True,
+        ),
+        option(
+            "system",
+            description="Save configuration file in system directory when setting parameters",
+            flag=True,
+        ),
     ]
 
     def handle(self) -> None:

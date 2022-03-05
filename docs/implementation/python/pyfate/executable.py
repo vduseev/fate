@@ -7,9 +7,11 @@ class Executable:
 
     @staticmethod
     def is_executable(path):
-        return Executable.__is_executable_file(path) \
-            or Executable.__is_shebang_file(path) \
+        return (
+            Executable.__is_executable_file(path)
+            or Executable.__is_shebang_file(path)
             or Executable.__is_code_file(path)
+        )
 
     @staticmethod
     def __is_executable_file(path):

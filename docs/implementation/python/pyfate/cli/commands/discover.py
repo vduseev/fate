@@ -8,13 +8,8 @@ class DiscoverCommand(Command):
     name = "discover"
     description = "Test dsicovery functionality"
 
-    arguments = [
-        argument("parameter", description="What to discover", optional=False)
-    ]
-    options = [
-        option("input-glob", flag=False),
-        option("output-glob", flag=False)
-    ]
+    arguments = [argument("parameter", description="What to discover", optional=False)]
+    options = [option("input-glob", flag=False), option("output-glob", flag=False)]
 
     def handle(self) -> None:
         parameter = self.argument("parameter")

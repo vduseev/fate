@@ -6,7 +6,8 @@ authors = ["vduseev <vagiz@duseev.com>"]
 license = "MIT"
 
 [tool.poetry.scripts]
-fate = 'pyfate.cli.app:run'
+fate = "pyfate.main:console"
+fate-webservice = "pyfate.main:webservice"
 
 [tool.poetry.dependencies]
 python = "^3.7"
